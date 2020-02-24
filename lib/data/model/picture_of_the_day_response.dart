@@ -21,6 +21,8 @@ abstract class PictureOfTheDayResponse
   String get url;
   @nullable
   String get title;
+  @nullable
+  String get media_type;
 
   PictureOfTheDayResponse._();
 

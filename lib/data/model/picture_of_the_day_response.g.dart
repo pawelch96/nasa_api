@@ -60,6 +60,12 @@ class _$PictureOfTheDayResponseSerializer
         ..add(serializers.serialize(object.title,
             specifiedType: const FullType(String)));
     }
+    if (object.media_type != null) {
+      result
+        ..add('media_type')
+        ..add(serializers.serialize(object.media_type,
+            specifiedType: const FullType(String)));
+    }
     return result;
   }
 
@@ -99,6 +105,10 @@ class _$PictureOfTheDayResponseSerializer
           result.title = serializers.deserialize(value,
               specifiedType: const FullType(String)) as String;
           break;
+        case 'media_type':
+          result.media_type = serializers.deserialize(value,
+              specifiedType: const FullType(String)) as String;
+          break;
       }
     }
 
@@ -119,6 +129,8 @@ class _$PictureOfTheDayResponse extends PictureOfTheDayResponse {
   final String url;
   @override
   final String title;
+  @override
+  final String media_type;
 
   factory _$PictureOfTheDayResponse(
           [void Function(PictureOfTheDayResponseBuilder) updates]) =>
@@ -130,7 +142,8 @@ class _$PictureOfTheDayResponse extends PictureOfTheDayResponse {
       this.explanation,
       this.hdurl,
       this.url,
-      this.title})
+      this.title,
+      this.media_type})
       : super._();
 
   @override
@@ -151,7 +164,8 @@ class _$PictureOfTheDayResponse extends PictureOfTheDayResponse {
         explanation == other.explanation &&
         hdurl == other.hdurl &&
         url == other.url &&
-        title == other.title;
+        title == other.title &&
+        media_type == other.media_type;
   }
 
   @override
@@ -159,11 +173,13 @@ class _$PictureOfTheDayResponse extends PictureOfTheDayResponse {
     return $jf($jc(
         $jc(
             $jc(
-                $jc($jc($jc(0, copyright.hashCode), date.hashCode),
-                    explanation.hashCode),
-                hdurl.hashCode),
-            url.hashCode),
-        title.hashCode));
+                $jc(
+                    $jc($jc($jc(0, copyright.hashCode), date.hashCode),
+                        explanation.hashCode),
+                    hdurl.hashCode),
+                url.hashCode),
+            title.hashCode),
+        media_type.hashCode));
   }
 
   @override
@@ -174,7 +190,8 @@ class _$PictureOfTheDayResponse extends PictureOfTheDayResponse {
           ..add('explanation', explanation)
           ..add('hdurl', hdurl)
           ..add('url', url)
-          ..add('title', title))
+          ..add('title', title)
+          ..add('media_type', media_type))
         .toString();
   }
 }
@@ -208,6 +225,10 @@ class PictureOfTheDayResponseBuilder
   String get title => _$this._title;
   set title(String title) => _$this._title = title;
 
+  String _media_type;
+  String get media_type => _$this._media_type;
+  set media_type(String media_type) => _$this._media_type = media_type;
+
   PictureOfTheDayResponseBuilder();
 
   PictureOfTheDayResponseBuilder get _$this {
@@ -218,6 +239,7 @@ class PictureOfTheDayResponseBuilder
       _hdurl = _$v.hdurl;
       _url = _$v.url;
       _title = _$v.title;
+      _media_type = _$v.media_type;
       _$v = null;
     }
     return this;
@@ -245,7 +267,8 @@ class PictureOfTheDayResponseBuilder
             explanation: explanation,
             hdurl: hdurl,
             url: url,
-            title: title);
+            title: title,
+            media_type: media_type);
     replace(_$result);
     return _$result;
   }
