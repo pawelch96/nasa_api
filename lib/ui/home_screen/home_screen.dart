@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:nasa_api/data/model/picture_of_the_day_response.dart';
+import 'package:nasa_api/ui/home_screen/widget/image_stack.dart';
 import 'package:nasa_api/ui/splash_screen/splash_screen_bloc.dart';
 import 'package:nasa_api/ui/splash_screen/splash_screen_state.dart';
-import 'package:transparent_image/transparent_image.dart';
 
 class HomeScreen extends StatefulWidget {
   HomeScreen({Key key}) : super(key: key);
@@ -14,8 +15,15 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   DateTime initialDate = DateTime.now();
+  SplashScreenBloc _splashBloc;
 
-  Future<Null> _selectDate(BuildContext context, SplashScreenBloc bloc) async {
+  @override
+  void initState() {
+    super.initState();
+    _splashBloc = BlocProvider.of<SplashScreenBloc>(context);
+  }
+
+  Future<Null> _selectDate(BuildContext context) async {
     final datePicked = await showDatePicker(
       context: context,
       initialDate: initialDate,
@@ -41,16 +49,16 @@ class _HomeScreenState extends State<HomeScreen> {
       },
     );
     if (datePicked != null && datePicked != initialDate) {
-      // setState(() {
-      //   initialDate = datePicked;
-      // });
-      bloc.onSplashScreenInitiated("${datePicked.toLocal()}".split(' ')[0]);
+      setState(() {
+        initialDate = datePicked;
+      });
+      _splashBloc
+          .onSplashScreenInitiated("${datePicked.toLocal()}".split(' ')[0]);
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    final _splashBloc = BlocProvider.of<SplashScreenBloc>(context);
     return BlocBuilder(
       bloc: _splashBloc,
       builder: (context, SplashScreenState state) {
@@ -59,7 +67,7 @@ class _HomeScreenState extends State<HomeScreen> {
             backgroundColor: Colors.grey[800],
             content: Text(state.error),
           );
-        } else {
+        } else if (state.isSuccessful) {
           return SafeArea(
             child: Scaffold(
               extendBodyBehindAppBar: true,
@@ -72,75 +80,47 @@ class _HomeScreenState extends State<HomeScreen> {
                     icon: Icon(Icons.calendar_today),
                     tooltip: 'Change date',
                     onPressed: () {
-                      _selectDate(context, _splashBloc);
+                      _selectDate(context);
                     },
                   )
                 ],
               ),
-              body: Stack(
-                children: <Widget>[
-                  Center(
-                    child: SpinKitChasingDots(
-                      color: Colors.lightBlueAccent,
-                      size: 86.0,
-                    ),
-                  ),
-                  Center(
-                    child: FadeInImage.memoryNetwork(
-                      placeholder: kTransparentImage,
-                      image: state.result.url,
-                      fit: BoxFit.cover,
-                      height: MediaQuery.of(context).size.height,
-                    ),
-                  ),
-                  Positioned(
-                    bottom: 48,
-                    child: Padding(
-                      padding: const EdgeInsets.all(24.0),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: <Widget>[
-                          Text(
-                            state.result.title,
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 24,
-                            ),
-                            maxLines: 1,
-                          ),
-                          SizedBox(
-                            height: 8,
-                          ),
-                          Text(
-                            "Author: " + state.result.copyright,
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 16.0,
-                              fontWeight: FontWeight.w300,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                  Align(
-                    alignment: Alignment.bottomCenter,
-                    child: Padding(
-                      padding: const EdgeInsets.only(bottom: 24.0),
-                      child: Icon(
-                        Icons.expand_less,
-                        color: Colors.white,
-                        size: 48.0,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
+              body: _buildBody(state.result),
             ),
           );
+        } else {
+          return _buildLoading();
         }
       },
+    );
+  }
+
+  Widget _buildBody(PictureOfTheDayResponse result) {
+    if (result.media_type == "image") {
+      return ImageStack(result: result);
+    } else if (result.media_type == "video") {
+      return Center(
+        child: Text(
+          "Video media type. Work in progress. Try another date.",
+          style: TextStyle(
+            color: Colors.white,
+            fontSize: 36.0,
+            fontWeight: FontWeight.w500,
+          ),
+        ),
+      );
+    } //TODO Video type result
+    else {
+      return _buildLoading();
+    }
+  }
+
+  Center _buildLoading() {
+    return Center(
+      child: SpinKitChasingDots(
+        color: Colors.lightBlueAccent,
+        size: 86.0,
+      ),
     );
   }
 }

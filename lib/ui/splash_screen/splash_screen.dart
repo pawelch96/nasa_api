@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:kiwi/kiwi.dart' as kiwi;
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:nasa_api/ui/home_screen/home_screen.dart';
 import 'package:nasa_api/ui/splash_screen/splash_screen_bloc.dart';
@@ -16,13 +15,14 @@ class SplashScreen extends StatefulWidget {
 }
 
 class _SplashScreenState extends State<SplashScreen> {
-  // @override
-  // void initState() {
-  //   super.initState();
+  SplashScreenBloc _splashBloc;
 
-  //   _splashBloc.onSplashScreenInitiated('');
-  //   // loadData();
-  // }
+  @override
+  void initState() {
+    super.initState();
+    _splashBloc = BlocProvider.of<SplashScreenBloc>(context);
+    _splashBloc.onSplashScreenInitiated('');
+  }
 
   // void loadData() async {
   //   _splashBloc.onSplashScreenInitiated('');
@@ -39,16 +39,10 @@ class _SplashScreenState extends State<SplashScreen> {
   //   }
   // }
 
-  // @override
-  // void dispose() {
-  //   super.dispose();
-  //   _splashBloc.dispose(); //TODO: check if it doesn't erase state data
-  // }
-
   @override
   Widget build(BuildContext context) {
-    final _splashBloc = BlocProvider.of<SplashScreenBloc>(context);
-    _splashBloc.onSplashScreenInitiated('');
+    // final _splashBloc = BlocProvider.of<SplashScreenBloc>(context);
+    // _splashBloc.onSplashScreenInitiated('');
 
     return BlocBuilder(
       bloc: _splashBloc,
@@ -57,7 +51,7 @@ class _SplashScreenState extends State<SplashScreen> {
           return _buildScaffold();
         } else if (state.isSuccessful) {
           Timer(
-            Duration(milliseconds: 2500),
+            Duration(milliseconds: 5000),
             () => Navigator.of(context).pushReplacement(
               MaterialPageRoute(
                 builder: (BuildContext context) => HomeScreen(),
@@ -81,7 +75,7 @@ class _SplashScreenState extends State<SplashScreen> {
         fit: StackFit.expand,
         children: <Widget>[
           Image.asset(
-            'images/splash.jpg',
+            'images/splash_screen.png',
             fit: BoxFit.cover,
           ),
           Container(
