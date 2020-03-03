@@ -13,6 +13,7 @@ void main() {
 class MyApp extends StatelessWidget {
   final splashBloc = kiwi.Container().resolve<SplashScreenBloc>();
 
+  // TODO: Change MyApp to Stateful Widget
   @override
   Widget build(BuildContext context) {
     return BlocProvider<SplashScreenBloc>(
