@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:nasa_api/data/model/picture_of_the_day_response.dart';
 import 'package:nasa_api/ui/home_screen/widget/image_stack.dart';
+import 'package:nasa_api/ui/home_screen/widget/video_widget.dart';
 import 'package:nasa_api/ui/splash_screen/splash_screen_bloc.dart';
 import 'package:nasa_api/ui/splash_screen/splash_screen_state.dart';
 
@@ -70,6 +71,7 @@ class _HomeScreenState extends State<HomeScreen> {
         } else if (state.isSuccessful) {
           return SafeArea(
             child: Scaffold(
+              backgroundColor: Colors.black,
               extendBodyBehindAppBar: true,
               appBar: AppBar(
                 title: Text("Astronomy POD"),
@@ -96,23 +98,10 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Widget _buildBody(PictureOfTheDayResponse result) {
-    if (result.media_type == "image") {
+    if (result.media_type == "video")
+      return VideoWidget(result: result);
+    else
       return ImageStack(result: result);
-    } else if (result.media_type == "video") {
-      return Center(
-        child: Text(
-          "Video media type. Work in progress. Try another date.",
-          style: TextStyle(
-            color: Colors.white,
-            fontSize: 36.0,
-            fontWeight: FontWeight.w500,
-          ),
-        ),
-      );
-    } //TODO Video type result
-    else {
-      return _buildLoading();
-    }
   }
 
   Center _buildLoading() {

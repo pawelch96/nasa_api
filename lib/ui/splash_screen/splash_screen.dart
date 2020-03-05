@@ -24,26 +24,8 @@ class _SplashScreenState extends State<SplashScreen> {
     _splashBloc.onSplashScreenInitiated('');
   }
 
-  // void loadData() async {
-  //   _splashBloc.onSplashScreenInitiated('');
-
-  //   if (_splashBloc.currentState.isSuccessful) {
-  //     Timer(
-  //       Duration(milliseconds: 3000),
-  //       () => Navigator.of(context).pushReplacement(
-  //         MaterialPageRoute(
-  //           builder: (BuildContext context) => HomeScreen(),
-  //         ),
-  //       ),
-  //     );
-  //   }
-  // }
-
   @override
   Widget build(BuildContext context) {
-    // final _splashBloc = BlocProvider.of<SplashScreenBloc>(context);
-    // _splashBloc.onSplashScreenInitiated('');
-
     return BlocBuilder(
       bloc: _splashBloc,
       builder: (context, SplashScreenState state) {
@@ -78,20 +60,7 @@ class _SplashScreenState extends State<SplashScreen> {
             'images/splash_screen.png',
             fit: BoxFit.cover,
           ),
-          Container(
-            alignment: Alignment.bottomCenter,
-            decoration: BoxDecoration(
-              gradient: LinearGradient(
-                begin: Alignment.bottomCenter,
-                end: Alignment.topCenter,
-                stops: [0.15, 0.5],
-                colors: [
-                  Colors.black.withOpacity(0.9),
-                  Colors.transparent,
-                ],
-              ),
-            ),
-          ),
+          _buildGradient(),
           Positioned(
             bottom: 72,
             left: (MediaQuery.of(context).size.width / 2) - 43,
@@ -101,6 +70,23 @@ class _SplashScreenState extends State<SplashScreen> {
             ),
           ),
         ],
+      ),
+    );
+  }
+
+  Container _buildGradient() {
+    return Container(
+      alignment: Alignment.bottomCenter,
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          begin: Alignment.bottomCenter,
+          end: Alignment.topCenter,
+          stops: [0.15, 0.5],
+          colors: [
+            Colors.black.withOpacity(0.9),
+            Colors.transparent,
+          ],
+        ),
       ),
     );
   }
