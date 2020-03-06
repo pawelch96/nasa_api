@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:nasa_api/ui/home_screen/home_screen.dart';
+import 'package:nasa_api/ui/home_screen/widget/common_widgets.dart';
 import 'package:nasa_api/ui/splash_screen/splash_screen_bloc.dart';
 import 'package:nasa_api/ui/splash_screen/splash_screen_state.dart';
 
@@ -60,7 +61,7 @@ class _SplashScreenState extends State<SplashScreen> {
             'images/splash_screen.png',
             fit: BoxFit.cover,
           ),
-          _buildGradient(),
+          GradientWidget(),
           Positioned(
             bottom: 72,
             left: (MediaQuery.of(context).size.width / 2) - 43,
@@ -70,23 +71,6 @@ class _SplashScreenState extends State<SplashScreen> {
             ),
           ),
         ],
-      ),
-    );
-  }
-
-  Container _buildGradient() {
-    return Container(
-      alignment: Alignment.bottomCenter,
-      decoration: BoxDecoration(
-        gradient: LinearGradient(
-          begin: Alignment.bottomCenter,
-          end: Alignment.topCenter,
-          stops: [0.15, 0.5],
-          colors: [
-            Colors.black.withOpacity(0.9),
-            Colors.transparent,
-          ],
-        ),
       ),
     );
   }

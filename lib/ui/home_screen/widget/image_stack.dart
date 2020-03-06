@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:nasa_api/data/model/picture_of_the_day_response.dart';
+import 'package:nasa_api/ui/home_screen/widget/bottom_icon_widget.dart';
+import 'package:nasa_api/ui/home_screen/widget/common_widgets.dart';
 import 'package:transparent_image/transparent_image.dart';
 
 class ImageStack extends StatelessWidget {
@@ -18,11 +20,14 @@ class ImageStack extends StatelessWidget {
           ),
         ),
         Center(
-          child: FadeInImage.memoryNetwork(
-            placeholder: kTransparentImage,
-            image: result.url,
-            fit: BoxFit.cover,
-            height: MediaQuery.of(context).size.height,
+          child: SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            child: FadeInImage.memoryNetwork(
+              placeholder: kTransparentImage,
+              image: result.url,
+              fit: BoxFit.cover,
+              height: MediaQuery.of(context).size.height,
+            ),
           ),
         ),
         Positioned(
@@ -34,21 +39,8 @@ class ImageStack extends StatelessWidget {
             child: _buildColumn(context: context),
           ),
         ),
-        Positioned(
-          bottom: 24,
-          left: 0.0,
-          right: 16.0,
-          child: Align(
-            alignment: Alignment.bottomCenter,
-            child: IconButton(
-              icon: Icon(
-                Icons.expand_less,
-                color: Colors.white,
-                size: 48.0,
-              ),
-              onPressed: () => _onIconPressed(context: context),
-            ),
-          ),
+        BottomIconWidget(
+          description: result.explanation,
         ),
       ],
     );
@@ -58,27 +50,12 @@ class ImageStack extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
-        _buildTitle(context: context),
+        TitleTextWidget(result: result, context: context),
         SizedBox(
           height: 8,
         ),
         if (result.copyright != null) _buildAuthorText(context: context),
       ],
-    );
-  }
-
-  Widget _buildTitle({BuildContext context}) {
-    return SizedBox(
-      width: MediaQuery.of(context).size.width - 8,
-      child: Text(
-        result.title,
-        softWrap: true,
-        style: TextStyle(
-          color: Colors.white,
-          fontWeight: FontWeight.bold,
-          fontSize: 24,
-        ),
-      ),
     );
   }
 
@@ -95,71 +72,5 @@ class ImageStack extends StatelessWidget {
         ),
       ),
     );
-  }
-
-  void _onIconPressed({BuildContext context}) {
-    showModalBottomSheet(
-      context: context,
-      backgroundColor: Colors.transparent,
-      builder: (context) {
-        return Container(
-          decoration: BoxDecoration(
-            color: Colors.transparent,
-          ),
-          child: Container(
-            decoration: BoxDecoration(
-                color: Color.fromRGBO(0, 0, 0, 0.7),
-                borderRadius: BorderRadius.only(
-                  topLeft: const Radius.circular(15),
-                  topRight: const Radius.circular(15),
-                )),
-            child: _buildBottomDescription(context: context),
-          ),
-        );
-      },
-    );
-  }
-
-  Widget _buildBottomDescription({BuildContext context}) {
-    return Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          children: <Widget>[
-            Expanded(
-              flex: 1,
-              child: SizedBox.expand(
-                child: Align(
-                  alignment: Alignment.topCenter,
-                  child: RaisedButton(
-                    color: Colors.transparent,
-                    child: Icon(
-                      Icons.expand_more,
-                      color: Colors.white,
-                      size: 48.0,
-                    ),
-                    onPressed: () => Navigator.pop(context),
-                  ),
-                ),
-              ),
-            ),
-            SizedBox(
-              height: 6,
-            ),
-            Expanded(
-              flex: 9,
-              child: SingleChildScrollView(
-                child: Text(
-                  result.explanation,
-                  softWrap: true,
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 16.0,
-                    fontWeight: FontWeight.w300,
-                  ),
-                ),
-              ),
-            )
-          ],
-        ));
   }
 }
